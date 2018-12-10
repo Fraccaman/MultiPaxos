@@ -28,7 +28,6 @@ class MessageClientHandler(MessageHandler):
 
             node.log.debug('multi-casting 1A to acceptors - {}'.format(message_one_a))
             node.timeout_handler.add_timeout_one_instance(new_instance.instance)
-            # new_instance.start_timeout(Phase.one, MessageClientHandler.timeout_phase_one_a, node, new_instance.instance)
 
     @staticmethod
     def timeout_phase_one_a(self, instance_id):

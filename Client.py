@@ -25,7 +25,7 @@ class Client(Component):
             if index % 500 == 0:
                 for msg in batch:
                     self.propose_value(msg)
-                sleep(0.5)
+                sleep(1.5)
             else:
                 batch.append(MessageClient(value))
 
