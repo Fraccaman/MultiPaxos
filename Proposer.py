@@ -27,7 +27,7 @@ class Proposer(Component):
 
         self.handler: MessageController = MessageController(self)
         self.timeout_handler: Timeout = Timeout(self)
-        self.heartbeat = ThreadTimer(self.LEADER_TIMEOUT, self.heartbeat_leader)
+        # self.heartbeat = ThreadTimer(self.LEADER_TIMEOUT, self.heartbeat_leader)
 
     def handle_message(self, serialized_msg: bytes) -> NoReturn:
         message = Message.deserialize(serialized_msg)

@@ -22,10 +22,10 @@ class Client(Component):
         #     self.propose_value(MessageClient(value))
         batch = []
         for index, value in enumerate(self.values):
-            if index % 500 == 0:
+            if index % 100 == 0:
                 for msg in batch:
                     self.propose_value(msg)
-                sleep(1.5)
+                sleep(1)
             else:
                 batch.append(MessageClient(value))
 
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     parser.add_argument('values', metavar='FILE', nargs='*', help='files to read, if empty, stdin is used')
 
     args = parser.parse_args()
-    values = [i for i in range(0, 10)]
+    values = [i for i in range(0, 100)]
     # for line in fileinput.input(files=args.values if len(args.values) > 0 else ('-',)):
     #     values.append(int(line))
 
