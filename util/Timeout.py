@@ -23,7 +23,7 @@ class Timeout:
 
     def timeout_phase_one_a(self):
         if self.node.is_leader():
-            for instance_id in self.phase_one_instances:
+            for instance_id in sorted(self.phase_one_instances):
                 self.node.state[instance_id].phase_one_b_messages = []
                 self.node.state[instance_id].c_round = self.node.state[instance_id].c_round + 1
 
