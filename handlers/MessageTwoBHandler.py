@@ -30,4 +30,4 @@ class MessageTwoBHandler(MessageHandler):
             node.send(NodeType.Leaner, decision_msg)
             node.send(NodeType.Proposer, decision_msg)
 
-            node.state[message.instance].phase_two_a_timeout.stop()
+            node.delivered_values.append(message.v_val)

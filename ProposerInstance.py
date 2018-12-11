@@ -28,6 +28,7 @@ class ProposerInstance:
         self.phase_two_a_timeout = None
         self.one_b_majority_reached: bool = False
         self.two_b_majority_reached: bool = False
+        self.is_delivered = False
 
     def add_message_one_b(self, message: MessageOneB):
         self.phase_one_b_messages.append(message)
@@ -51,27 +52,6 @@ class ProposerInstance:
             return True
         else:
             return False
-
-    def start_timeout(self, timeout_type: Phase, f, *args, timeout: int = 3) -> NoReturn:
-        timer = ThreadTimer(timeout, f, args[0], args[1])
-        if timeout_type is Phase.one and self.phase_one_a_timeout is None:
-            # print('t1 start {}'.format(self.phase_one_a_timeout))
-            self.phase_one_a_timeout = timer
-        elif timeout_type is Phase.two and self.phase_two_a_timeout is None:
-            # print('t2 start {}'.format(self.phase_two_a_timeout))
-            self.phase_two_a_timeout = timer
-
-    def stop_timeout(self, timeout_type: Phase) -> NoReturn:
-        if timeout_type is Phase.one and self.phase_one_a_timeout is not None:
-            # print('t1 stop {} - {}'.format(self.phase_one_a_timeout, self.instance))
-            self.phase_one_a_timeout.stop()
-            del self.phase_one_a_timeout
-            self.phase_one_a_timeout = None
-        elif timeout_type is Phase.two and self.phase_two_a_timeout is not None:
-            # print('t2 stop {} - {}'.format(self.phase_two_a_timeout, self.instance))
-            self.phase_two_a_timeout.stop()
-            del self.phase_two_a_timeout
-            self.phase_two_a_timeout = None
 
     def get_largest_v_round(self) -> int:
         return max([msg.v_round for msg in self.phase_one_b_messages])

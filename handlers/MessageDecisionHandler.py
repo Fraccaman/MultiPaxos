@@ -21,7 +21,7 @@ class MessageDecisionHandler(MessageHandler):
     def handle(node: Component, message: MessageDecision) -> NoReturn:
         # node.log.info('I have received value: {} for instance {}'.format(message.value, message.instance))
         if node.whoiam is NodeType.Leaner:
-            ordered_values = node.state.add_instance(node, message.instance, message.value)
+            ordered_values = node.state.add_instance(message.instance, message.value)
             for value in ordered_values: print(value)
         elif node.whoiam is NodeType.Proposer and not node.is_leader():
             node.state[message.instance] = ProposerInstance(message.value, 0, message.instance)

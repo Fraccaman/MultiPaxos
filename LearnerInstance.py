@@ -1,14 +1,14 @@
 from typing import Dict, List
 
 
-class LeanerInstance:
+class LearnerInstance:
 
     def __init__(self):
         self.waiting_instances: Dict[int, int] = {}
         self.ordered_values: List = []
         self.last_ordered_instance = -1
 
-    def add_instance(self, test, instance: int, value: int):
+    def add_instance(self, instance: int, value: int):
         if self.last_ordered_instance + 1 == instance:
             self.ordered_values.append(value)
             self.last_ordered_instance = instance

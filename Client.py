@@ -18,19 +18,20 @@ class Client(Component):
 
     def run(self):
         # self.send(NodeType.Proposer, MessageClient(5))
-        # for value in self.values:
-        #     self.propose_value(MessageClient(value))
-        batch = []
-        for index, value in enumerate(self.values):
-            if index % 100 == 0:
-                for msg in batch:
-                    self.propose_value(msg)
-                sleep(1)
-            else:
-                batch.append(MessageClient(value))
-
-        for msg in batch:
-            self.propose_value(msg)
+        for value in self.values:
+            self.propose_value(MessageClient(value))
+            sleep(0.005 * (len(self.values) / 4000))
+        # batch = []
+        # for index, value in enumerate(self.values):
+        #     if index % 500 == 0:
+        #         for msg in batch:
+        #             self.propose_value(msg)
+        #         sleep(1)
+        #     else:
+        #         batch.append(MessageClient(value))
+        #
+        # for msg in batch:
+        #     self.propose_value(msg)
 
 
 if __name__ == '__main__':

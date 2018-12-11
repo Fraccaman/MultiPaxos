@@ -10,7 +10,7 @@ from MessageController import MessageController
 class Acceptor(Component):
 
     def __init__(self, id: int, config_path: str = 'config', ttl=1):
-        super().__init__(NodeType.Acceptor, id, config_path, ttl)
+        super().__init__(NodeType.Acceptor, id, config_path, 8, ttl)
         self.state: Dict[int, AcceptorInstance] = {}
 
         self.handler: MessageController = MessageController(self)

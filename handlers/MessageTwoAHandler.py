@@ -19,7 +19,7 @@ class MessageTwoAHandler(MessageHandler):
     @staticmethod
     def handle(node: Acceptor, message: MessageTwoA) -> NoReturn:
         instance = node.state[message.instance]
-        # node.log.debug('{} - {}'.format(message.c_round, instance.round))
+        node.log.debug('{} - {}'.format(message.c_round, instance.round))
         if message.c_round >= instance.round:
             instance.v_round = message.c_round
             instance.v_val = message.c_val

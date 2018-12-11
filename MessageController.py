@@ -1,5 +1,6 @@
 import Message
 from Component import Component
+from handlers.MessageLearnerCatchUpHandler import MessageLearnerCatchUpHandler
 from handlers.MessageClientHandler import MessageClientHandler
 from handlers.MessageDecisionHandler import MessageDecisionHandler
 from handlers.MessageLeaderElectionHandler import MessageLeaderElectionHandler
@@ -20,7 +21,8 @@ class MessageController:
             MessageTwoBHandler,
             MessageClientHandler,
             MessageDecisionHandler,
-            MessageLeaderElectionHandler
+            MessageLeaderElectionHandler,
+            MessageLearnerCatchUpHandler
         ]
 
     def handle(self, message: Message):

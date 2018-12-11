@@ -12,6 +12,7 @@ class MessageType(Enum):
     leader = "Leader - 👑"
     hearthbeat = "Hearthbeat - ❤️"
     decision = "Decision - 🔨"
+    catchup = "CatchUp - "
 
 
 class Message:
@@ -107,3 +108,13 @@ class MessageLeaderElection(Message):
 
     def __str__(self):
         return "{} - proposer id: {}".format(self.msg_type, self.id)
+
+
+class MessageLearnerCatchUp(Message):
+    def __init__(self, last_seen: int, values=[]):
+        super().__init__(MessageType.catchup)
+        self.last_seen: int = last_seen
+        self.values = values
+
+    def __str__(self):
+        return "{} - last seen: {}, len_values: {}".format(self.msg_type, self.last_seen, len(self.values))

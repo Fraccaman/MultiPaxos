@@ -28,13 +28,3 @@ class MessageClientHandler(MessageHandler):
 
             node.log.debug('multi-casting 1A to acceptors - {}'.format(message_one_a))
             node.timeout_handler.add_timeout_one_instance(new_instance.instance)
-
-    @staticmethod
-    def timeout_phase_one_a(self, instance_id):
-        if self.is_leader():
-            self.state[instance_id].phase_one_b_messages = []
-            self.state[instance_id].c_round = self.state[instance_id].c_round + 1
-
-            phase_one_a_msg = MessageOneA(self.state[instance_id].c_round, self.state[instance_id].instance)
-            self.send(NodeType.Acceptor, phase_one_a_msg)
-            self.log.debug('re-sending message phase 1A with new c-round {}'.format(phase_one_a_msg))

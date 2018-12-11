@@ -1,8 +1,8 @@
 import argparse
 
 from Component import Component, NodeType
-from LeanerInstance import LeanerInstance
-from Message import Message
+from LearnerInstance import LearnerInstance
+from Message import Message, MessageLearnerCatchUp
 from MessageController import MessageController
 
 
@@ -10,13 +10,18 @@ class Learner(Component):
 
     def __init__(self, id: int = None, config_path: str = 'config', ttl=1):
         super().__init__(NodeType.Leaner, id, config_path, ttl)
-        self.state: LeanerInstance = LeanerInstance()
+        self.state: LearnerInstance = LearnerInstance()
 
         self.handler: MessageController = MessageController(self)
+        self.send_catch_up_message()
 
     def handle_message(self, serialized_msg: Message):
         message = Message.deserialize(serialized_msg)
         self.handler.handle(message)
+
+    def send_catch_up_message(self):
+        if self.state.last_ordered_instance == -1:
+            self.send(NodeType.Proposer, MessageLearnerCatchUp(self.state.last_ordered_instance))
 
     def run(self):
         self.log.debug('Leaner {} is ready to receive'.format(self.id))

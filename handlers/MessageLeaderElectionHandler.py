@@ -18,7 +18,7 @@ class MessageLeaderElectionHandler(MessageHandler):
 
     @staticmethod
     def handle(node: Proposer, message: MessageLeaderElection) -> NoReturn:
-        node.ids.add(message.id, timeout=node.LEADER_TIMEOUT + 1)
+        node.ids.add(message.id, timeout=node.timeout_handler.LEADER_TIMEOUT + 1)
         leader_id = max(node.ids)
 
         if leader_id is node.id:
