@@ -17,7 +17,7 @@ class MyLogger(object, metaclass=SingletonType):
 
     def __init__(self):
         self._logger = logging.getLogger("crumbs")
-        self._logger.setLevel(logging.DEBUG)
+        self._logger.setLevel(logging.WARNING)
         formatter = logging.Formatter('%(asctime)s \t [%(levelname)s | %(filename)s:%(lineno)s] > %(message)s')
 
         now = datetime.datetime.now()

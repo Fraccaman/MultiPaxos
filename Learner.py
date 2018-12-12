@@ -21,7 +21,7 @@ class Learner(Component):
 
     def send_catch_up_message(self):
         if self.state.last_ordered_instance == -1:
-            self.send(NodeType.Proposer, MessageLearnerCatchUp(self.state.last_ordered_instance))
+            self.send(NodeType.Proposer, MessageLearnerCatchUp(self.state.last_ordered_instance, -1))
 
     def run(self):
         self.log.debug('Leaner {} is ready to receive'.format(self.id))

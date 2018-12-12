@@ -1,14 +1,15 @@
 import threading
 from enum import Enum
-from typing import NoReturn, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from Message import MessageOneB, MessageTwoB
-from util.ThreadTimer import ThreadTimer
+from threading import Lock
 
 if TYPE_CHECKING:
     pass
 
-lock = threading.Lock()
+lock_phase_one = Lock()
+lock_phase_two = Lock()
 
 
 class Phase(Enum):
@@ -37,21 +38,28 @@ class ProposerInstance:
         self.phase_two_b_messages.append(message)
 
     def is_majority_one_b(self, c_round: int) -> bool:
-
-        if len(list(filter(lambda msg: msg.round is c_round,
-                           self.phase_one_b_messages))) > 1 and not self.one_b_majority_reached:
-            self.one_b_majority_reached = True
-            return True
-        else:
-            return False
+        lock_phase_one.acquire()
+        try:
+            if len(list(filter(lambda msg: msg.round is c_round,
+                               self.phase_one_b_messages))) > 1 and not self.one_b_majority_reached:
+                self.one_b_majority_reached = True
+                return True
+            else:
+                return False
+        finally:
+            lock_phase_one.release()
 
     def is_majority_two_b(self):
-        if len(list(filter(lambda msg: msg.v_round is self.c_round,
-                           self.phase_two_b_messages))) > 1 and not self.two_b_majority_reached:
-            self.two_b_majority_reached = True
-            return True
-        else:
-            return False
+        lock_phase_two.acquire()
+        try:
+            if len(list(filter(lambda msg: msg.v_round is self.c_round,
+                               self.phase_two_b_messages))) > 1 and not self.two_b_majority_reached:
+                self.two_b_majority_reached = True
+                return True
+            else:
+                return False
+        finally:
+            lock_phase_two.release()
 
     def get_largest_v_round(self) -> int:
         return max([msg.v_round for msg in self.phase_one_b_messages])

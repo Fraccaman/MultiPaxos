@@ -7,6 +7,8 @@ class LearnerInstance:
         self.waiting_instances: Dict[int, int] = {}
         self.ordered_values: List = []
         self.last_ordered_instance = -1
+        self.catch_up: Dict[str, List] = {}
+        self.catch_up_size: Dict[str, (int, int)] = {}
 
     def add_instance(self, instance: int, value: int):
         if self.last_ordered_instance + 1 == instance:

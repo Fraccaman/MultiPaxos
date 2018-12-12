@@ -11,6 +11,7 @@ from util.Timeout import Timeout
 
 
 class Proposer(Component):
+    BATCH_SIZE = 50
 
     def __init__(self, id: int = None, config_path: str = 'config', ttl=1):
         super().__init__(NodeType.Proposer, id, config_path, 8, ttl)

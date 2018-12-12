@@ -19,7 +19,7 @@ class NodeType(Enum):
 
 
 class Component:
-    BUFFER_SIZE = 4096
+    BUFFER_SIZE = 4096 * 3
 
     def __init__(self, whoiam: NodeType, id: int = None, file_path: str = 'config', n_of_workers=4, ttl: int = 1):
         self.whoiam: NodeType = whoiam
@@ -28,7 +28,7 @@ class Component:
         self.mc_port: int = self.get_port()
         self.recv_sock: socket = self.__init_recv_socket(self.mc_group, self.mc_port)
         self.ttl: int = ttl  # default 1 if localhost
-        self.thread_pool: ThreadPoolExecutor = ThreadPoolExecutor(max_workers=1)
+        self.thread_pool: ThreadPoolExecutor = ThreadPoolExecutor(max_workers=4)
         self.log: MyLogger = MyLogger.__call__().get_logger()
         self.id: int = id if id > 0 else os.getpid()
 

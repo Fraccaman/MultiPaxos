@@ -42,7 +42,7 @@ if __name__ == '__main__':
     parser.add_argument('values', metavar='FILE', nargs='*', help='files to read, if empty, stdin is used')
 
     args = parser.parse_args()
-    values = [i for i in range(0, 100)]
+    values = [i for i in range(0, 4000)]
     # for line in fileinput.input(files=args.values if len(args.values) > 0 else ('-',)):
     #     values.append(int(line))
 

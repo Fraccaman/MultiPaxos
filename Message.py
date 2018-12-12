@@ -111,10 +111,18 @@ class MessageLeaderElection(Message):
 
 
 class MessageLearnerCatchUp(Message):
-    def __init__(self, last_seen: int, values=[]):
+
+    MAX_BUFFER_SIZE = 50
+
+    def __init__(self, from_instance: int, to_instance: int, batch_size: int=0, number_of_batch: int=0, batch_number: int=0, values=[], batch_id=uuid.uuid4()):
         super().__init__(MessageType.catchup)
-        self.last_seen: int = last_seen
+        self.batch_size: int = self.MAX_BUFFER_SIZE if batch_size == 0 else batch_size
+        self.from_instance = from_instance
+        self.to_instance = to_instance
+        self.number_of_batch = number_of_batch
+        self.batch_number = batch_number
         self.values = values
+        self.batch_id = batch_id
 
     def __str__(self):
-        return "{} - last seen: {}, len_values: {}".format(self.msg_type, self.last_seen, len(self.values))
+        return str(self.__class__) + '\n' + '\n'.join(('{} = {}'.format(item, self.__dict__[item]) for item in self.__dict__))
