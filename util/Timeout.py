@@ -32,6 +32,10 @@ class Timeout:
         self.phase_two_time = time.time()
         self.leader_election_time = time.time()
 
+        self.timer_phase_one.start()
+        self.timer_phase_two.start()
+        self.timer_leader_election.start()
+
     def timeout_phase_one_a(self):
         while True:
             if self.node.is_leader() and self.phase_one_time + self.PHASE_ONE_TIMEOUT < time.time():
