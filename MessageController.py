@@ -1,8 +1,11 @@
+from typing import NoReturn
+
 import Message
 from Component import Component
 from handlers.MessageClientHandler import MessageClientHandler
 from handlers.MessageDecisionHandler import MessageDecisionHandler
 from handlers.MessageLeaderElectionHandler import MessageLeaderElectionHandler
+from handlers.MessageLearnerCatchUpHandler import MessageLearnerCatchUpHandler
 from handlers.MessageOneAHandler import MessageOneAHandler
 from handlers.MessageOneBHandler import MessageOneBHandler
 from handlers.MessageTwoAHandler import MessageTwoAHandler
@@ -20,10 +23,11 @@ class MessageController:
             MessageTwoBHandler,
             MessageClientHandler,
             MessageDecisionHandler,
-            MessageLeaderElectionHandler
+            MessageLeaderElectionHandler,
+            MessageLearnerCatchUpHandler
         ]
 
-    def handle(self, message: Message):
+    def handle(self, message: Message) -> NoReturn:
         for handler in self.handlers:
             if handler.is_valid_handler_for(self.node.whoiam, message):
                 handler.handle(self.node, message)

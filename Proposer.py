@@ -1,33 +1,29 @@
 import argparse
-import threading
-from typing import NoReturn, Dict
+from typing import NoReturn, Dict, List
 
 from Component import Component, NodeType
 from Message import Message, MessageLeaderElection
 from MessageController import MessageController
 from ProposerInstance import ProposerInstance
-from util.ThreadTimer import ThreadTimer
 from util.TimedSet import TimedSet
 from util.Timeout import Timeout
 
 
 class Proposer(Component):
-    LEADER_TIMEOUT = 4.0
-    PHASE_ONE_TIMEOUT = 3.0
-    PHASE_TWO_TIMEOUT = 3.0
+    BATCH_SIZE = 50
 
     def __init__(self, id: int = None, config_path: str = 'config', ttl=1):
-        super().__init__(NodeType.Proposer, id, config_path, ttl)
+        super().__init__(NodeType.Proposer, id, config_path, 8, ttl)
         # leader election stuff
         self.leader: bool = False
         self.ids: TimedSet = TimedSet()
         # proposer state
         self.processed_proposed: set = set()
         self.state: Dict[int, ProposerInstance] = {}
+        self.delivered_values: List[int] = []
 
         self.handler: MessageController = MessageController(self)
         self.timeout_handler: Timeout = Timeout(self)
-        self.heartbeat = ThreadTimer(self.LEADER_TIMEOUT, self.heartbeat_leader)
 
     def handle_message(self, serialized_msg: bytes) -> NoReturn:
         message = Message.deserialize(serialized_msg)
@@ -39,16 +35,19 @@ class Proposer(Component):
     def is_new_propose_message(self, uuid: str) -> bool:
         return uuid not in self.processed_proposed
 
-    def add_instance(self, value: int):
+    def add_instance(self, value: int) -> ProposerInstance:
         new_instance_id = self.get_next_instance()
         new_instance = ProposerInstance(value, 1, new_instance_id)
         self.state[new_instance_id] = new_instance
         return new_instance
 
-    def get_next_instance(self):
-        return 0 if len(self.state.keys()) == 0 else max(self.state.keys()) + 1
+    def get_next_instance(self) -> int:
+        return 0 if self.get_current_instance() == 0 else max(self.state.keys()) + 1
 
-    def heartbeat_leader(self):
+    def get_current_instance(self) -> int:
+        return len(self.state.keys())
+
+    def heartbeat_leader(self) -> NoReturn:
         self.send(self.whoiam, MessageLeaderElection(self.id))
 
     def run(self) -> NoReturn:
@@ -69,6 +68,4 @@ if __name__ == '__main__':
     try:
         proposer.run()
     except (KeyboardInterrupt, SystemExit):
-        proposer.thread_pool.shutdown(wait=True)
-        proposer.heartbeat.stop()
-        proposer.timeout_handler.stop()
+        proposer.thread_pool.shutdown()

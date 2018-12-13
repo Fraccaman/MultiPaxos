@@ -1,8 +1,9 @@
 import argparse
+from typing import NoReturn
 
 from Component import Component, NodeType
-from LeanerInstance import LeanerInstance
-from Message import Message
+from LearnerInstance import LearnerInstance
+from Message import Message, MessageLearnerCatchUp
 from MessageController import MessageController
 
 
@@ -10,15 +11,20 @@ class Learner(Component):
 
     def __init__(self, id: int = None, config_path: str = 'config', ttl=1):
         super().__init__(NodeType.Leaner, id, config_path, ttl)
-        self.state: LeanerInstance = LeanerInstance()
+        self.state: LearnerInstance = LearnerInstance()
 
         self.handler: MessageController = MessageController(self)
+        self.send_catch_up_message()
 
-    def handle_message(self, serialized_msg: Message):
+    def handle_message(self, serialized_msg: Message) -> NoReturn:
         message = Message.deserialize(serialized_msg)
         self.handler.handle(message)
 
-    def run(self):
+    def send_catch_up_message(self) -> NoReturn:
+        if self.state.last_ordered_instance == -1:
+            self.send(NodeType.Proposer, MessageLearnerCatchUp(self.state.last_ordered_instance, -1))
+
+    def run(self) -> NoReturn:
         self.log.debug('Leaner {} is ready to receive'.format(self.id))
         while True:
             value = self.receive()
@@ -33,4 +39,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     learner = Learner(args.id, args.config_path)
-    learner.run()
+
+    try:
+        learner.run()
+    except (KeyboardInterrupt, SystemExit):
+        learner.thread_pool.shutdown()

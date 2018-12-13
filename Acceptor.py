@@ -1,5 +1,5 @@
 import argparse
-from typing import Dict, Tuple, Any
+from typing import Dict, Tuple, Any, NoReturn
 
 from AcceptorInstance import AcceptorInstance
 from Component import Component, NodeType
@@ -10,12 +10,12 @@ from MessageController import MessageController
 class Acceptor(Component):
 
     def __init__(self, id: int, config_path: str = 'config', ttl=1):
-        super().__init__(NodeType.Acceptor, id, config_path, ttl)
+        super().__init__(NodeType.Acceptor, id, config_path, 8, ttl)
         self.state: Dict[int, AcceptorInstance] = {}
 
         self.handler: MessageController = MessageController(self)
 
-    def handle_message(self, serialized_msg: Message):
+    def handle_message(self, serialized_msg: Message) -> NoReturn:
         message = Message.deserialize(serialized_msg)
         self.handler.handle(message)
 

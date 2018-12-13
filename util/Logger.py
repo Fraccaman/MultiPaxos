@@ -1,4 +1,3 @@
-import datetime
 import logging
 
 
@@ -19,8 +18,6 @@ class MyLogger(object, metaclass=SingletonType):
         self._logger = logging.getLogger("crumbs")
         self._logger.setLevel(logging.DEBUG)
         formatter = logging.Formatter('%(asctime)s \t [%(levelname)s | %(filename)s:%(lineno)s] > %(message)s')
-
-        now = datetime.datetime.now()
 
         streamHandler = logging.StreamHandler()
         streamHandler.setFormatter(formatter)
