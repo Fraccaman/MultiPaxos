@@ -10,7 +10,7 @@ class MessageType(Enum):
     twoB = "Accepted - 2B - 2️🅱️"
     client = "Propose - 🔢"
     leader = "Leader - 👑"
-    hearthbeat = "Hearthbeat - ❤️"
+    heartbeat = "Heartbeat - ❤️"
     decision = "Decision - 🔨"
     catchup = "CatchUp - 🧗"
 
@@ -27,9 +27,8 @@ class Message:
     def deserialize(message):
         return pickle.loads(message)
 
-
     def __str__(self):
-        return str(self.__class__) + '\n' + '\n'.join(('{} = {}'.format(item, self.__dict__[item]) for item in self.__dict__))
+        return str(self.__class__) + ', ' + ', '.join(('{} = {}'.format(item, self.__dict__[item]) for item in self.__dict__))
 
 
 class MessageOneA(Message):
