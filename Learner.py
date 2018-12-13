@@ -38,4 +38,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     learner = Learner(args.id, args.config_path)
-    learner.run()
+
+    try:
+        learner.run()
+    except (KeyboardInterrupt, SystemExit):
+        learner.thread_pool.shutdown()

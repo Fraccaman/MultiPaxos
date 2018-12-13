@@ -1,6 +1,6 @@
 import threading
 from enum import Enum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 from Message import MessageOneB, MessageTwoB
 from threading import Lock
@@ -20,16 +20,14 @@ class Phase(Enum):
 class ProposerInstance:
 
     def __init__(self, value: int, c_round: int, instance: int):
-        self.instance = instance
-        self.to_be_proposed = value
-        self.c_round = c_round
-        self.phase_one_b_messages = []
-        self.phase_two_b_messages = []
-        self.phase_one_a_timeout = None
-        self.phase_two_a_timeout = None
+        self.instance: int = instance
+        self.to_be_proposed: int = value
+        self.c_round: int = c_round
+        self.phase_one_b_messages: List = []
+        self.phase_two_b_messages: List = []
         self.one_b_majority_reached: bool = False
         self.two_b_majority_reached: bool = False
-        self.is_delivered = False
+        self.is_delivered: bool = False
 
     def add_message_one_b(self, message: MessageOneB):
         self.phase_one_b_messages.append(message)

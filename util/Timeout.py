@@ -38,17 +38,19 @@ class Timeout:
 
     def timeout_phase_one_a(self):
         while True:
-            if self.node.is_leader():
+            if self.node.is_leader() and self.phase_one_time + self.PHASE_ONE_TIMEOUT < time.time():
                 for instance_id in sorted(self.phase_one_instances.keys()):
                     if self.phase_one_instances[instance_id] + self.PHASE_ONE_TIMEOUT < time.time():
                         self.node.state[instance_id].phase_one_b_messages = []
                         self.node.state[instance_id].c_round = self.node.state[instance_id].c_round + 1
+                        self.node.state[instance_id].one_b_majority_reached = False
 
                         phase_one_a_msg = MessageOneA(self.node.state[instance_id].c_round,
                                                       self.node.state[instance_id].instance)
                         self.node.send(NodeType.Acceptor, phase_one_a_msg)
                         self.node.log.debug('re-sending message phase 1A with new c-round {}'.format(phase_one_a_msg))
                         self.phase_one_instances[instance_id] = time.time()
+                self.phase_one_time = time.time()
                 time.sleep(1)
 
     def timeout_phase_two_a(self):
@@ -56,6 +58,8 @@ class Timeout:
             if self.node.is_leader() and self.phase_two_time + self.PHASE_TWO_TIMEOUT < time.time():
                 for message in self.phase_two_instances:
                     self.node.log.debug('sending again message 2A - {}'.format(message))
+                    self.node.state[message.instance].phase_two_b_messages = []
+                    self.node.state[message.instance].two_b_majority_reached = False
                     self.node.send(NodeType.Acceptor, message)
                 self.phase_two_time = time.time()
                 time.sleep(1)
@@ -66,10 +70,6 @@ class Timeout:
                 self.node.send(self.node.whoiam, MessageLeaderElection(self.node.id))
                 self.leader_election_time = time.time()
             time.sleep(1)
-
-    def stop(self):
-        self.timer_phase_one.join()
-        self.timer_phase_two.join()
 
     def add_timeout_one_instance(self, instance: int):
         self.phase_one_instances[instance] = time.time()

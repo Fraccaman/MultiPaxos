@@ -69,6 +69,4 @@ if __name__ == '__main__':
     try:
         proposer.run()
     except (KeyboardInterrupt, SystemExit):
-        proposer.thread_pool.shutdown(wait=True)
-        proposer.timeout_handler.stop()
-        sys.exit(0)
+        proposer.thread_pool.shutdown()

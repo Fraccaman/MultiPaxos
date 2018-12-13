@@ -18,7 +18,8 @@ class MessageOneBHandler(MessageHandler):
 
     @staticmethod
     def handle(node: Proposer, message: MessageOneB) -> NoReturn:
-        if message.instance not in node.state: pass
+        if message.instance not in node.state:
+            pass
 
         instance = node.state[message.instance]
 

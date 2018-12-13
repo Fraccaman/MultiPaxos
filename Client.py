@@ -17,21 +17,9 @@ class Client(Component):
         self.send(NodeType.Proposer, msg)
 
     def run(self):
-        # self.send(NodeType.Proposer, MessageClient(5))
         for value in self.values:
             self.propose_value(MessageClient(value))
-            sleep(0.005 * (len(self.values) / 4000))
-        # batch = []
-        # for index, value in enumerate(self.values):
-        #     if index % 500 == 0:
-        #         for msg in batch:
-        #             self.propose_value(msg)
-        #         sleep(1)
-        #     else:
-        #         batch.append(MessageClient(value))
-        #
-        # for msg in batch:
-        #     self.propose_value(msg)
+            sleep(0.005)
 
 
 if __name__ == '__main__':
@@ -42,9 +30,7 @@ if __name__ == '__main__':
     parser.add_argument('values', metavar='FILE', nargs='*', help='files to read, if empty, stdin is used')
 
     args = parser.parse_args()
-    values = [i for i in range(0, 4000)]
-    # for line in fileinput.input(files=args.values if len(args.values) > 0 else ('-',)):
-    #     values.append(int(line))
+    values = [i for i in range(0, 2222)]
 
     client = Client(values, args.id, args.config_path)
     try:
