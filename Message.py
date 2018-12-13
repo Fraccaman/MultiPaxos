@@ -12,7 +12,7 @@ class MessageType(Enum):
     leader = "Leader - 👑"
     hearthbeat = "Hearthbeat - ❤️"
     decision = "Decision - 🔨"
-    catchup = "CatchUp - "
+    catchup = "CatchUp - 🧗"
 
 
 class Message:
@@ -28,15 +28,16 @@ class Message:
         return pickle.loads(message)
 
 
+    def __str__(self):
+        return str(self.__class__) + '\n' + '\n'.join(('{} = {}'.format(item, self.__dict__[item]) for item in self.__dict__))
+
+
 class MessageOneA(Message):
 
     def __init__(self, c_round: int, instance: int):
         super().__init__(MessageType.oneA)
         self.c_round: int = c_round
         self.instance: int = instance
-
-    def __str__(self):
-        return "{} - c_round: {}, instance: {}".format(self.msg_type, self.c_round, self.instance)
 
 
 class MessageOneB(Message):
@@ -48,10 +49,6 @@ class MessageOneB(Message):
         self.v_val: int = v_val
         self.instance: int = instance
 
-    def __str__(self):
-        return "{} - round: {}, v_round: {}, v_val: {}, instance: {}".format(self.msg_type, self.round, self.v_round,
-                                                                             self.v_val, self.instance)
-
 
 class MessageTwoA(Message):
 
@@ -60,10 +57,6 @@ class MessageTwoA(Message):
         self.c_round: int = c_round
         self.c_val: int = c_val
         self.instance: int = instance
-
-    def __str__(self):
-        return "{} - c_round: {}, c_val: {}, instance: {}".format(self.msg_type, self.c_round, self.c_val,
-                                                                  self.instance)
 
 
 class MessageTwoB(Message):
@@ -74,9 +67,6 @@ class MessageTwoB(Message):
         self.v_val: int = v_val
         self.instance: int = instance
 
-    def __str__(self):
-        return "{} - v_round: {}, v_val: {}".format(self.msg_type, self.v_round, self.v_val)
-
 
 class MessageClient(Message):
 
@@ -84,9 +74,6 @@ class MessageClient(Message):
         super().__init__(MessageType.client)
         self.value: int = value
         self.uuid: str = uuid.uuid4().hex
-
-    def __str__(self):
-        return "{} - value: {}, random: {}".format(self.msg_type, self.value, self.uuid)
 
 
 class MessageDecision(Message):
@@ -96,18 +83,12 @@ class MessageDecision(Message):
         self.value = value
         self.instance = instance
 
-    def __str__(self):
-        return "{} - value: {}".format(self.msg_type, self.value)
-
 
 class MessageLeaderElection(Message):
 
     def __init__(self, id: int):
         super().__init__(MessageType.leader)
         self.id: int = id
-
-    def __str__(self):
-        return "{} - proposer id: {}".format(self.msg_type, self.id)
 
 
 class MessageLearnerCatchUp(Message):
@@ -123,6 +104,3 @@ class MessageLearnerCatchUp(Message):
         self.batch_number = batch_number
         self.values = values
         self.batch_id = batch_id
-
-    def __str__(self):
-        return str(self.__class__) + '\n' + '\n'.join(('{} = {}'.format(item, self.__dict__[item]) for item in self.__dict__))
